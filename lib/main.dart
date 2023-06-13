@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_mbank/home_page/core/cubit/exchange_rate_cubit.dart';
@@ -13,11 +14,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Dio dio = Dio();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: BlocProvider(
-        create: (context) => CurrencyListBloc(CurrencyRepository()),
-        child: const CurrencyListScreen(),
+      home: RepositoryProvider(
+        create: (context) => CurrencyRepository(dio: dio),
+        child: BlocProvider(
+          create: (context) => CurrencyListBloc(CurrencyRepository(dio: dio)),
+          child: const CurrencyListScreen(),
+        ),
       ),
     );
   }
